@@ -1,0 +1,23 @@
+<div class="container mt-5" style="max-width: 400px;">
+  <h3 class="mb-4">Login</h3>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" class="form-control" formControlName="email" />
+    </div>
+
+    <div class="mb-3">
+      <label>Senha</label>
+      <input type="password" class="form-control" formControlName="password" />
+    </div>
+
+    <div *ngIf="errorMessage" class="text-danger mb-3">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">
+      Entrar
+    </button>
+  </form>
+</div>
