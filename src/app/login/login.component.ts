@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -32,8 +32,9 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem('token', res.token);
         console.log('Login bem-sucedido!');
-        // Aqui você pode redirecionar, por exemplo:
-        // this.router.navigate(['/home']);
+        if(res != null){
+          this.router.navigate(['/create-user']);
+        }
       },
       error: () => {
         this.errorMessage = 'Email ou senha inválidos';
