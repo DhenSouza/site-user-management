@@ -1,13 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-initial-menu',
   standalone: true,
-  imports: [RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './initial-menu.component.html',
   styleUrls: ['./initial-menu.component.scss']
 })
 export class InitialMenuComponent {
+
+    constructor(private router: Router){}
+
+    logout(): void {
+      localStorage.clear(); 
+      this.router.navigate(['/login']);
+    }
 
 }

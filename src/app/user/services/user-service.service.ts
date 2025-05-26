@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface CreateUserRequest {
-  name: string;
-  email: string;
-  password: string;
-}
+import { CreateUserRequest } from '../models/CreateUserRequest';
+import { UserRequest } from '../models/UserRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private readonly API_URL = 'http://localhost:8080/api/users';
+  private readonly API_URL = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +22,20 @@ export class UserService {
     console.log("header: ", headers)
     console.log("data: ", data)
 
-    return this.http.post(this.API_URL, data, { headers });
+    var url = this.API_URL + "/users"
+
+    return this.http.post(url, data, { headers });
+  }
+
+  listUsers(data: UserRequest): Observable<any>{
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    var url = this.API_URL + "/users"
+
+    return this.http.get(url, { headers });
   }
 }

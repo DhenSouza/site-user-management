@@ -1,0 +1,10 @@
+/* Espaçamento e responsividade já garantidos pelo Bootstrap,
+   mas você pode personalizar cores, sombras, etc. */
+
+.card {
+  transition: transform .2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}

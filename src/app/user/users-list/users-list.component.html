@@ -1,0 +1,51 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Lista de Usuários</h3>
+    <button routerLink="/create-user" class="btn btn-primary">Novo Usuário</button>
+  </div>
+
+  <form [formGroup]="filterForm" class="mb-3">
+    <input
+      formControlName="search"
+      type="text"
+      class="form-control"
+      placeholder="Pesquisar por nome, email ou role"
+    />
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; trackBy: trackById">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="user.active ? 'bg-success' : 'bg-secondary'"
+            >
+              {{ user.active ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-secondary me-1">Editar</button>
+            <button class="btn btn-sm btn-outline-danger">Excluir</button>
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0">
+          <td colspan="6" class="text-center py-4">Nenhum usuário encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

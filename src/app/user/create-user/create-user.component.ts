@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user-service.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
@@ -15,11 +15,11 @@ export class CreateUserComponent {
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private route: Router) {
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     });
   }
 
@@ -29,6 +29,7 @@ export class CreateUserComponent {
     this.userService.createUser(this.userForm.value).subscribe({
       next: () => {
         this.successMessage = 'User created successfully!';
+        this.route.navigate(["/dashboard"])
         this.userForm.reset();
       },
       error: () => {

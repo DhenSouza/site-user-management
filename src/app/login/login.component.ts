@@ -26,19 +26,33 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) return;
+    // 1) se o form for inválido, aborta de imediato
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
-    this.authService.login(this.loginForm.value).subscribe({
+    this.errorMessage = null;   // limpa mensagem anterior
+    const creds = this.loginForm.value;
+
+    this.authService.login(creds).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token);
-        console.log('Login bem-sucedido!');
-        if(res != null){
-          this.router.navigate(['/']);
+        // 2) garanta que veio o token
+        if (!res?.token) {
+          this.errorMessage = 'Resposta inesperada do servidor';
+          return;
         }
+
+        // 3) armazena e navega
+        localStorage.setItem('token', res.token);
+        console.log('Login bem-sucedido! Token armazenado.');
+        this.router.navigate(['/dashboard']);
       },
-      error: () => {
+      error: (err) => {
+        console.error('Erro ao logar:', err);
         this.errorMessage = 'Email ou senha inválidos';
       }
     });
   }
+
 }
