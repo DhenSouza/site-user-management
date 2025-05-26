@@ -33,7 +33,7 @@ export class LoginComponent {
         localStorage.setItem('token', res.token);
         console.log('Login bem-sucedido!');
         if(res != null){
-          this.router.navigate(['/create-user']);
+          this.router.navigate(['/']);
         }
       },
       error: () => {
