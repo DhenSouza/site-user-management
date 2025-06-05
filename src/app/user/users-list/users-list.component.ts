@@ -21,22 +21,30 @@ export class UsersListComponent implements OnInit {
   size = 20;
   totalElements = 0;
 
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
   constructor(private fb: FormBuilder, private userService: UserService) {
     this.filterForm = this.fb.group({ search: [''] });
   }
 
   ngOnInit(): void {
     this.loadUsers();
+
+      this.filterForm.get('search')?.valueChanges.subscribe(() => {
+        this.page = 0; // reinicia a paginação se aplicável
+      this.loadUsers();
+      });
   }
 
   loadUsers(): void {
-    this.userService.listUsers({} as UserRequest)
-      .subscribe({
+      const term = this.filterForm.get('search')?.value ?? '';
+      this.userService.searchUsers(term, this.page, this.size).subscribe({
         next: (res: PageResponse<UserRequest>) => {
           this.users = res.content;
           this.totalElements = res.totalElements;
         },
-        error: err => console.error('Erro ao carregar usuários:', err)
+        error: err => console.error('Erro ao buscar usuários:', err)
       });
   }
 
@@ -48,6 +56,30 @@ export class UsersListComponent implements OnInit {
       u.email.toLowerCase().includes(term) ||
       u.role.toLowerCase().includes(term)
     );
+  }
+
+  deleteUser(userId: string): void {
+    this.userService.deleteUser(userId).subscribe({
+      next: () => {
+        this.successMessage = 'Usuário deletado com sucesso.';
+        this.errorMessage = null;
+        this.loadUsers(); // atualiza a lista se aplicável
+        this.autoClearMessages();
+      },
+      error: (err) => {
+        console.error('Erro ao deletar usuário:', err);
+        this.successMessage = null;
+        this.errorMessage = 'Erro ao deletar o usuário. Tente novamente.';
+        this.autoClearMessages();
+      }
+    });
+  }
+
+  private autoClearMessages(): void {
+    setTimeout(() => {
+      this.successMessage = null;
+      this.errorMessage = null;
+    }, 3000);
   }
 
   trackById(_idx: number, user: UserRequest): string {

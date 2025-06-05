@@ -21,9 +21,15 @@ export class LoginComponent {
     });
   }
 
-  ngOnInit(){
-    console.log("Login Carregado")
+ngOnInit(): void {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.router.navigate(['/dashboard']);
+    }
   }
+}
+
 
   onSubmit(): void {
     // 1) se o form for inválido, aborta de imediato

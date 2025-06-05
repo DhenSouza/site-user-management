@@ -8,26 +8,25 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanActivateChild {
+
   constructor(private router: Router) {}
 
-    private isLoggedIn(): boolean {
-      // no SSR não há window nem localStorage
-      if (typeof window === 'undefined') {
-        return false; 
-      }
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined';
+  }
 
-      const token = localStorage.getItem('token');
-      console.log('Token recuperado (browser):', token);
-      return !!token;
-    }
+  private isLoggedIn(): boolean {
+    if (!this.isBrowser()) return false;
 
-
+    const token = localStorage.getItem('token');
+    console.log('[AuthGuard] Token encontrado:', token);
+    return !!token;
+  }
 
   canActivate(): boolean | UrlTree {
-    if (this.isLoggedIn()){
-        return true;
-    }
-    return this.router.parseUrl('/login');
+    return this.isLoggedIn()
+      ? true
+      : this.router.parseUrl('/login');
   }
 
   canActivateChild(): boolean | UrlTree {

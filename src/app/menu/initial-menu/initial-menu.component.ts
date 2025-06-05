@@ -14,7 +14,7 @@ export class InitialMenuComponent {
     constructor(private router: Router){}
 
     logout(): void {
-      localStorage.clear(); 
+      localStorage.clear();
       this.router.navigate(['/login']);
     }
 
